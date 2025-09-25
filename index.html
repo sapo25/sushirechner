@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Sushi Rechner</title>
+  <meta name="color-scheme" content="dark">
+  <style>
+    :root{
+      --bg:#000;
+      --fg:#fff;
+      --muted:#cfcfcf;
+      --line:#ffffff26;
+      --radius:14px;
+      --gap:14px;
+      --pad:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    body{min-height:100svh}
+    .screen{height:100svh;display:grid;grid-template-rows:auto auto 1fr auto;gap:var(--gap);padding:var(--pad)}
+    .hero{
+      position:relative;
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      height:32vh;
+      min-height:180px;
+      overflow:hidden;
+    }
+    .hero img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .form{display:grid;gap:10px}
+    .row{display:grid;grid-template-columns: 1fr auto;gap:10px;align-items:center}
+    label{font-size:14px;color:var(--muted)}
+    input[type=number]{
+      width:100%;background:#111;color:var(--fg);border:1px solid var(--line);
+      border-radius:10px;padding:12px;font-size:16px;
+    }
+    .action-bar{display:grid;grid-template-columns:56px 1fr;gap:12px;align-items:center}
+    .calc-btn{
+      width:56px;height:56px;border-radius:12px;border:1px solid var(--line);
+      background:#fff;color:#000;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;
+    }
+    .hint{font-size:12px;color:var(--muted)}
+    details{background:#0f0f0f;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+    summary{cursor:pointer}
+    .grid2{display:grid;grid-template-columns: 1fr 1fr;gap:8px;margin-top:8px}
+    .grid2 input{padding:10px;font-size:14px}
+    .result{border:1px solid var(--line);border-radius:var(--radius);padding:14px;min-height:110px}
+    .result h2{margin:0 0 8px 0;font-size:18px}
+    .result p{margin:6px 0;font-size:15px}
+    .muted{color:var(--muted);font-size:13px}
+    footer{font-size:12px;color:var(--muted);opacity:.9;display:flex;justify-content:space-between;gap:10px}
+  </style>
+</head>
+<body>
+  <div class="screen" role="application" aria-label="Sushi Rechner">
+    <div class="hero" aria-label="Bildbereich">
+      <img src="Bild.jpg" alt="Sushi Teller">
+    </div>
+
+    <form class="form" onsubmit="return false" id="form">
+      <div class="row">
+        <label for="grams">Feld zwei. Roher Sushireis in Gramm</label>
+        <input id="grams" type="number" min="0" step="1" placeholder="z. B. 300">
+      </div>
+      <div class="row">
+        <label for="rolls">Feld drei. Anzahl Rollen klassisch</label>
+        <input id="rolls" type="number" min="0" step="1" placeholder="z. B. 6">
+      </div>
+      <div class="row">
+        <label for="uramaki">Feld vier. Anzahl Inside Out Rollen</label>
+        <input id="uramaki" type="number" min="0" step="1" placeholder="z. B. 4">
+      </div>
+      <div class="row">
+        <label for="nigiri">Feld fünf. Anzahl Nigiri Stücke</label>
+        <input id="nigiri" type="number" min="0" step="1" placeholder="z. B. 20">
+      </div>
+      <div class="action-bar">
+        <button id="calc" class="calc-btn" aria-label="Berechnen">Go</button>
+        <div class="hint">Tippe auf Go. Der Rechner zeigt unten die benötigten Mengen an.</div>
+      </div>
+      <details>
+        <summary>Annahmen öffnen</summary>
+        <div class="grid2">
+          <label>Rohreis je klassische Rolle<input id="gPerRoll" type="number" value="55"></label>
+          <label>Rohreis je Inside Out<input id="gPerUramaki" type="number" value="75"></label>
+          <label>Rohreis je Nigiri<input id="gPerNigiri" type="number" value="12"></label>
+          <label>Essig je 100 g<input id="mlVinegarPer100" type="number" value="18"></label>
+          <label>Zucker je 100 g<input id="gSugarPer100" type="number" value="7"></label>
+          <label>Salz je 100 g<input id="gSaltPer100" type="number" value="3"></label>
+        </div>
+      </details>
+    </form>
+
+    <section class="result" id="result" aria-live="polite">
+      <h2>Feld sieben. Ergebnis</h2>
+      <p class="muted">Noch keine Eingabe. Bitte Werte eintragen und Go tippen.</p>
+    </section>
+
+    <footer>
+      <div>Sushi Rechner</div>
+      <div>Kalkulation je 100 g. 18 ml Essig. 7 g Zucker. 3 g Salz.</div>
+    </footer>
+  </div>
+
+  <script>
+    const fmt = n => new Intl.NumberFormat('de-DE',{maximumFractionDigits:1}).format(n);
+    function calc(){
+      const gramsDirect = +document.getElementById('grams').value || 0;
+      const rolls = +document.getElementById('rolls').value || 0;
+      const uramaki = +document.getElementById('uramaki').value || 0;
+      const nigiri = +document.getElementById('nigiri').value || 0;
+      const gPerRoll = +document.getElementById('gPerRoll').value || 55;
+      const gPerUramaki = +document.getElementById('gPerUramaki').value || 75;
+      const gPerNigiri = +document.getElementById('gPerNigiri').value || 12;
+      const mlVinegarPer100 = +document.getElementById('mlVinegarPer100').value || 18;
+      const gSugarPer100 = +document.getElementById('gSugarPer100').value || 7;
+      const gSaltPer100 = +document.getElementById('gSaltPer100').value || 3;
+      const gramsFromCounts = rolls*gPerRoll + uramaki*gPerUramaki + nigiri*gPerNigiri;
+      const totalRaw = gramsDirect + gramsFromCounts;
+      const factor = totalRaw / 100;
+      const vinegar = factor * mlVinegarPer100;
+      const sugar = factor * gSugarPer100;
+      const salt = factor * gSaltPer100;
+      document.getElementById('result').innerHTML = `
+        <h2>Feld sieben. Ergebnis</h2>
+        <p>Benötigter roher Reis: <strong>${fmt(totalRaw)} g</strong></p>
+        <p>Reisessig: <strong>${fmt(vinegar)} ml</strong>. Zucker: <strong>${fmt(sugar)} g</strong>. Salz: <strong>${fmt(salt)} g</strong></p>
+      `;
+    }
+    document.getElementById('calc').addEventListener('click', calc);
+  </script>
+</body>
+</html>
