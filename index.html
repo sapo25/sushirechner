@@ -14,47 +14,48 @@
       --radius:14px;
       --gap:14px;
       --pad:16px;
+      --safe: env(safe-area-inset-bottom);
     }
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    html,body{min-height:100%;margin:0;background:var(--bg);color:var(--fg);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
     body{min-height:100svh}
-    .screen{height:100svh;display:grid;grid-template-rows:auto auto 1fr auto;gap:var(--gap);padding:var(--pad)}
+    /* Container nicht hart auf 100svh fixieren, damit die Seite bei mehr Inhalt sauber scrollt */
+    .screen{
+      min-height:100svh;
+      display:flex;
+      flex-direction:column;
+      gap:var(--gap);
+      padding:var(--pad);
+      padding-bottom: calc(var(--pad) + var(--safe));
+    }
     .hero{
-      position:relative;
       border:1px solid var(--line);
       border-radius:var(--radius);
       height:32vh;
       min-height:180px;
       overflow:hidden;
     }
-    .hero img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
+    .hero img{width:100%;height:100%;object-fit:cover;display:block}
     .form{display:grid;gap:10px}
     .row{display:grid;grid-template-columns: 1fr auto;gap:10px;align-items:center}
     label{font-size:14px;color:var(--muted)}
-    input[type=number]{
-      width:100%;background:#111;color:var(--fg);border:1px solid var(--line);
-      border-radius:10px;padding:12px;font-size:16px;
-    }
+    input[type=number]{width:100%;background:#111;color:var(--fg);border:1px solid var(--line);
+      border-radius:10px;padding:12px;font-size:16px}
     .action-bar{display:grid;grid-template-columns:56px 1fr;gap:12px;align-items:center}
-    .calc-btn{
-      width:56px;height:56px;border-radius:12px;border:1px solid var(--line);
-      background:#fff;color:#000;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;
-    }
+    .calc-btn{width:56px;height:56px;border-radius:12px;border:1px solid var(--line);background:#fff;color:#000;
+      font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center}
     .hint{font-size:12px;color:var(--muted)}
     details{background:#0f0f0f;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
     summary{cursor:pointer}
     .grid2{display:grid;grid-template-columns: 1fr 1fr;gap:8px;margin-top:8px}
     .grid2 input{padding:10px;font-size:14px}
-    .result{border:1px solid var(--line);border-radius:var(--radius);padding:14px;min-height:110px;white-space:pre-line}
+    /* Ergebnis erhält großzügigen Innenabstand und Zeilenhöhe. Kein Überlappen mit dem Footer. */
+    .result{border:1px solid var(--line);border-radius:var(--radius);padding:16px;white-space:pre-line;line-height:1.5}
     .result h2{margin:0 0 8px 0;font-size:18px}
-    .result p{margin:6px 0;font-size:15px}
     .muted{color:var(--muted);font-size:13px}
-    footer{font-size:12px;color:var(--muted);opacity:.9;display:flex;justify-content:space-between;gap:10px}
+    /* Footer bleibt statisch. Extra Abstand nach oben verhindert Kollision. */
+    footer{margin-top:12px;font-size:12px;color:var(--muted);opacity:.9;display:flex;justify-content:space-between;gap:10px}
   </style>
 </head>
 <body>
@@ -94,13 +95,12 @@
           <label>Zucker je 100 g<input id="gSugarPer100" type="number" value="7"></label>
           <label>Salz je 100 g<input id="gSaltPer100" type="number" value="3"></label>
         </div>
-        <p class="muted">Die Voreinstellungen: Nigiri 9,375 g roh pro Stück (32 Stück aus 300 g roh). Klassische Rolle ca. 60 g roh. Werte sind anpassbar.</p>
       </details>
     </form>
 
     <section class="result" id="result" aria-live="polite">
       <h2>Ergebnis</h2>
-      <p class="muted">Noch keine Eingabe. Bitte Werte eintragen und Go tippen.</p>
+      Noch keine Eingabe. Bitte Werte eintragen und Go tippen.
     </section>
 
     <footer>
