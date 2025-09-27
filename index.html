@@ -50,7 +50,7 @@
     summary{cursor:pointer}
     .grid2{display:grid;grid-template-columns: 1fr 1fr;gap:8px;margin-top:8px}
     .grid2 input{padding:10px;font-size:14px}
-    .result{border:1px solid var(--line);border-radius:var(--radius);padding:14px;min-height:110px}
+    .result{border:1px solid var(--line);border-radius:var(--radius);padding:14px;min-height:110px;white-space:pre-line}
     .result h2{margin:0 0 8px 0;font-size:18px}
     .result p{margin:6px 0;font-size:15px}
     .muted{color:var(--muted);font-size:13px}
@@ -65,20 +65,20 @@
 
     <form class="form" onsubmit="return false" id="form">
       <div class="row">
-        <label for="grams">Feld zwei. Roher Sushireis in Gramm</label>
+        <label for="grams">Roher Sushireis in Gramm</label>
         <input id="grams" type="number" min="0" step="1" placeholder="z. B. 300">
       </div>
       <div class="row">
-        <label for="rolls">Feld drei. Anzahl Rollen klassisch</label>
+        <label for="rolls">Anzahl Rollen klassisch</label>
         <input id="rolls" type="number" min="0" step="1" placeholder="z. B. 6">
       </div>
       <div class="row">
-        <label for="uramaki">Feld vier. Anzahl Inside Out Rollen</label>
+        <label for="uramaki">Anzahl Inside Out Rollen</label>
         <input id="uramaki" type="number" min="0" step="1" placeholder="z. B. 4">
       </div>
       <div class="row">
-        <label for="nigiri">Feld fünf. Anzahl Nigiri Stücke</label>
-        <input id="nigiri" type="number" min="0" step="1" placeholder="z. B. 20">
+        <label for="nigiri">Anzahl Nigiri Stücke</label>
+        <input id="nigiri" type="number" min="0" step="1" placeholder="z. B. 32">
       </div>
       <div class="action-bar">
         <button id="calc" class="calc-btn" aria-label="Berechnen">Go</button>
@@ -87,18 +87,19 @@
       <details>
         <summary>Annahmen öffnen</summary>
         <div class="grid2">
-          <label>Rohreis je klassische Rolle<input id="gPerRoll" type="number" value="55"></label>
+          <label>Rohreis je klassische Rolle<input id="gPerRoll" type="number" value="60"></label>
           <label>Rohreis je Inside Out<input id="gPerUramaki" type="number" value="75"></label>
-          <label>Rohreis je Nigiri<input id="gPerNigiri" type="number" value="12"></label>
+          <label>Rohreis je Nigiri<input id="gPerNigiri" type="number" value="9.375" step="0.001"></label>
           <label>Essig je 100 g<input id="mlVinegarPer100" type="number" value="18"></label>
           <label>Zucker je 100 g<input id="gSugarPer100" type="number" value="7"></label>
           <label>Salz je 100 g<input id="gSaltPer100" type="number" value="3"></label>
         </div>
+        <p class="muted">Die Voreinstellungen: Nigiri 9,375 g roh pro Stück (32 Stück aus 300 g roh). Klassische Rolle ca. 60 g roh. Werte sind anpassbar.</p>
       </details>
     </form>
 
     <section class="result" id="result" aria-live="polite">
-      <h2>Feld sieben. Ergebnis</h2>
+      <h2>Ergebnis</h2>
       <p class="muted">Noch keine Eingabe. Bitte Werte eintragen und Go tippen.</p>
     </section>
 
@@ -115,9 +116,9 @@
       const rolls = +document.getElementById('rolls').value || 0;
       const uramaki = +document.getElementById('uramaki').value || 0;
       const nigiri = +document.getElementById('nigiri').value || 0;
-      const gPerRoll = +document.getElementById('gPerRoll').value || 55;
+      const gPerRoll = +document.getElementById('gPerRoll').value || 60;
       const gPerUramaki = +document.getElementById('gPerUramaki').value || 75;
-      const gPerNigiri = +document.getElementById('gPerNigiri').value || 12;
+      const gPerNigiri = +document.getElementById('gPerNigiri').value || 9.375;
       const mlVinegarPer100 = +document.getElementById('mlVinegarPer100').value || 18;
       const gSugarPer100 = +document.getElementById('gSugarPer100').value || 7;
       const gSaltPer100 = +document.getElementById('gSaltPer100').value || 3;
@@ -128,9 +129,12 @@
       const sugar = factor * gSugarPer100;
       const salt = factor * gSaltPer100;
       document.getElementById('result').innerHTML = `
-        <h2>Feld sieben. Ergebnis</h2>
-        <p>Benötigter roher Reis: <strong>${fmt(totalRaw)} g</strong></p>
-        <p>Reisessig: <strong>${fmt(vinegar)} ml</strong>. Zucker: <strong>${fmt(sugar)} g</strong>. Salz: <strong>${fmt(salt)} g</strong></p>
+        <h2>Ergebnis</h2>
+        Benötigter roher Reis: ${fmt(totalRaw)} g
+
+        Reisessig: ${fmt(vinegar)} ml
+        Zucker: ${fmt(sugar)} g
+        Salz: ${fmt(salt)} g
       `;
     }
     document.getElementById('calc').addEventListener('click', calc);
